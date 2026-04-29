@@ -1,0 +1,301 @@
+---
+const navLinks = [
+  { href: '#sobre-mi',  label: 'Sobre mí' },
+  { href: '#servicios', label: 'Servicios' },
+  { href: '#proceso',   label: 'Proceso' },
+  { href: '#modalidades', label: 'Modalidades' },
+  { href: '#contacto',  label: 'Contacto' },
+];
+---
+<header id="navbar" role="banner">
+  <nav class="nav-inner container" aria-label="Navegación principal">
+    <!-- Logo -->
+    <a href="/" class="nav-logo" aria-label="Sofía Marcela Pedraza — Inicio">
+      <img
+        src="/assets/images/logo-sin-fondo.png"
+        alt="Logo Sofía Marcela Pedraza Lozano — Psicóloga"
+        width="140"
+        height="56"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </a>
+
+    <!-- Desktop navigation -->
+    <ul class="nav-links" role="list">
+      {navLinks.map(link => (
+        <li>
+          <a href={link.href} class="nav-link">{link.label}</a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- Desktop CTA -->
+    <a
+      href="https://wa.me/573000000000?text=Hola%20Sof%C3%ADa%2C%20quiero%20agendar%20una%20consulta"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn btn-primary nav-cta"
+      aria-label="Agendar consulta por WhatsApp"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+      </svg>
+      Agendar consulta
+    </a>
+
+    <!-- Hamburger button (mobile) -->
+    <button
+      id="menu-btn"
+      class="hamburger"
+      aria-label="Abrir menú de navegación"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+    </button>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="mobile-menu" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Menú de navegación">
+    <ul class="mobile-nav-links" role="list">
+      {navLinks.map(link => (
+        <li>
+          <a href={link.href} class="mobile-nav-link">{link.label}</a>
+        </li>
+      ))}
+    </ul>
+    <a
+      href="https://wa.me/573000000000?text=Hola%20Sof%C3%ADa%2C%20quiero%20agendar%20una%20consulta"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn btn-primary btn-lg mobile-cta"
+    >
+      Agendar consulta por WhatsApp
+    </a>
+  </div>
+</header>
+
+<script>
+  const navbar   = document.getElementById('navbar')!;
+  const menuBtn  = document.getElementById('menu-btn')!;
+  const mobileMenu = document.getElementById('mobile-menu')!;
+  const mobileLinks = mobileMenu.querySelectorAll('.mobile-nav-link');
+
+  // Scroll behavior: transparent → frosted glass
+  const handleScroll = () => {
+    if (window.scrollY > 60) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  };
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  handleScroll();
+
+  // Mobile menu toggle
+  function openMenu() {
+    mobileMenu.classList.add('open');
+    menuBtn.setAttribute('aria-expanded', 'true');
+    mobileMenu.setAttribute('aria-hidden', 'false');
+    menuBtn.setAttribute('aria-label', 'Cerrar menú de navegación');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    mobileMenu.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    mobileMenu.setAttribute('aria-hidden', 'true');
+    menuBtn.setAttribute('aria-label', 'Abrir menú de navegación');
+    document.body.style.overflow = '';
+  }
+
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.contains('open') ? closeMenu() : openMenu();
+  });
+
+  mobileLinks.forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // Close on escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileMenu.classList.contains('open')) closeMenu();
+  });
+</script>
+
+<style>
+  #navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    transition: background var(--dur-base) var(--ease-out),
+                box-shadow var(--dur-base) var(--ease-out),
+                backdrop-filter var(--dur-base) var(--ease-out);
+  }
+
+  #navbar.scrolled {
+    background: rgba(248, 247, 255, 0.92);
+    backdrop-filter: blur(20px) saturate(1.5);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
+    box-shadow: 0 2px 24px rgba(59, 29, 225, 0.08);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    height: var(--nav-height);
+  }
+
+  .nav-logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-logo img {
+    height: 52px;
+    width: auto;
+    transition: filter var(--dur-base) var(--ease-out);
+  }
+
+  /* On transparent navbar the logo might need to be visible on dark bg */
+  #navbar:not(.scrolled) .nav-logo img {
+    filter: brightness(0) invert(1);
+  }
+
+  .nav-links {
+    display: none;
+    align-items: center;
+    gap: var(--space-1);
+    margin-left: auto;
+  }
+
+  @media (min-width: 1024px) {
+    .nav-links { display: flex; }
+  }
+
+  .nav-link {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-on-primary);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    transition: color var(--dur-fast) var(--ease-out),
+                background var(--dur-fast) var(--ease-out);
+    letter-spacing: 0.02em;
+  }
+
+  #navbar.scrolled .nav-link {
+    color: var(--color-text-muted);
+  }
+
+  .nav-link:hover {
+    color: var(--color3) !important;
+    background: var(--color-surface-offset);
+  }
+
+  .nav-cta {
+    display: none;
+    margin-left: var(--space-4);
+    font-size: var(--text-sm);
+    padding: 10px 20px;
+    min-height: 44px;
+  }
+
+  @media (min-width: 1024px) {
+    .nav-cta { display: inline-flex; }
+  }
+
+  /* Hamburger */
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 8px;
+    margin-left: auto;
+    border-radius: var(--radius-sm);
+    transition: background var(--dur-fast);
+  }
+
+  @media (min-width: 1024px) {
+    .hamburger { display: none; }
+  }
+
+  .hamburger:hover { background: rgba(255,255,255,0.15); }
+
+  #navbar.scrolled .hamburger:hover { background: var(--color-surface-offset); }
+
+  .hamburger-bar {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: #fff;
+    border-radius: var(--radius-full);
+    transition: background var(--dur-fast);
+  }
+
+  #navbar.scrolled .hamburger-bar { background: var(--color-text); }
+
+  /* Mobile menu */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    top: var(--nav-height);
+    background: var(--color-surface);
+    padding: var(--space-8) var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    transform: translateX(100%);
+    transition: transform 0.35s var(--ease-out);
+    z-index: 999;
+    overflow-y: auto;
+    box-shadow: -4px 0 24px rgba(59,29,225,0.12);
+  }
+
+  .mobile-menu.open {
+    transform: translateX(0);
+  }
+
+  @media (min-width: 1024px) {
+    .mobile-menu { display: none; }
+  }
+
+  .mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .mobile-nav-link {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    color: var(--color-text);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--color-divider);
+    transition: color var(--dur-fast), padding-left var(--dur-fast);
+  }
+
+  .mobile-nav-link:hover {
+    color: var(--color1);
+    padding-left: var(--space-3);
+  }
+
+  .mobile-cta {
+    width: 100%;
+    justify-content: center;
+    margin-top: auto;
+  }
+</style>

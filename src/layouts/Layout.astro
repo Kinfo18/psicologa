@@ -1,0 +1,182 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+}
+
+const {
+  title = 'Sofía Marcela Pedraza Lozano | Psicóloga en Yopal, Casanare',
+  description = 'Sofía Marcela Pedraza Lozano es psicóloga clínica y comunitaria en Yopal, Casanare. Atención presencial y virtual con enfoque en TCC, humanismo y psicología sistémica para adultos y jóvenes.',
+  canonical = 'https://sofiapedrazapsicologa.com',
+} = Astro.props;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      name: 'Sofía Marcela Pedraza Lozano',
+      jobTitle: 'Psicóloga Clínica y Comunitaria',
+      description: description,
+      image: `${canonical}/assets/images/psicologa-1.png`,
+      url: canonical,
+      alumniOf: {
+        '@type': 'CollegeOrUniversity',
+        name: 'Institución universitaria de la región',
+        address: { '@type': 'PostalAddress', addressRegion: 'Casanare', addressCountry: 'CO' },
+      },
+      sameAs: [
+        'https://www.instagram.com/sofiapedrazapsicologa',
+        'https://www.facebook.com/sofiapedrazapsicologa',
+        'https://x.com/sofiapsicologa',
+      ],
+      hasCredential: {
+        '@type': 'EducationalOccupationalCredential',
+        credentialCategory: 'Título Profesional',
+        name: 'Psicóloga — Registro activo Colegio Colombiano de Psicólogos (Colpsic)',
+      },
+    },
+    {
+      '@type': 'LocalBusiness',
+      '@id': `${canonical}#consultorio`,
+      name: 'Consultorio Psicológico — Sofía Marcela Pedraza Lozano',
+      description: 'Consultorio de psicología clínica y comunitaria en Yopal, Casanare. Atención presencial y virtual.',
+      url: canonical,
+      telephone: '+57-000-000-0000',
+      image: `${canonical}/assets/images/logo-fondo-blanco.png`,
+      priceRange: 'COP',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Yopal',
+        addressRegion: 'Casanare',
+        addressCountry: 'CO',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: 5.3378,
+        longitude: -72.3964,
+      },
+      openingHoursSpecification: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+        opens: '08:00',
+        closes: '18:00',
+      },
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Servicios Psicológicos',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Terapia Cognitivo-Conductual (TCC)' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Psicoterapia Individual' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Orientación Vocacional' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Intervención en Crisis' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Atención Virtual — Casanare y Colombia' } },
+        ],
+      },
+    },
+  ],
+};
+---
+<!doctype html>
+<html lang="es" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="psicóloga Yopal, psicóloga Casanare, salud mental Yopal, terapia psicológica Yopal, psicóloga joven Casanare, bienestar emocional Casanare, psicóloga clínica Yopal, atención psicológica virtual Casanare" />
+    <meta name="author" content="Sofía Marcela Pedraza Lozano" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={`${canonical}/assets/images/psicologa-1.png`} />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:site_name" content="Sofía Marcela Pedraza Lozano — Psicóloga" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${canonical}/assets/images/psicologa-1.png`} />
+
+    <!-- Geo SEO -->
+    <meta name="geo.region" content="CO-CAS" />
+    <meta name="geo.placename" content="Yopal, Casanare, Colombia" />
+    <meta name="geo.position" content="5.3378;-72.3964" />
+    <meta name="ICBM" content="5.3378, -72.3964" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Raleway:wght@300;400;500;600;700&display=swap"
+      as="style"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Raleway:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/images/logo-sin-fondo.png" />
+
+    <!-- Schema.org -->
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+    <style>
+      /* Critical above-fold styles */
+      #loading-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: #0f0a2e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      #loading-screen.fade-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #loading-video {
+        max-width: min(320px, 80vw);
+        height: auto;
+        border-radius: 16px;
+      }
+    </style>
+  </head>
+  <body class="loading">
+    <slot />
+
+    <!-- Reveal animation observer -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+        );
+
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach((el) => {
+          observer.observe(el);
+        });
+      });
+    </script>
+  </body>
+</html>
