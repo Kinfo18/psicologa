@@ -1,20 +1,15 @@
 ---
 ---
 <div id="loading-screen" role="status" aria-label="Cargando sitio web">
-  <div class="loading-inner">
-    <video
-      id="loading-video"
-      src="/assets/video/logo-animado.mp4"
-      autoplay
-      muted
-      playsinline
-      preload="auto"
-      aria-hidden="true"
-    ></video>
-    <div class="loading-dots" aria-hidden="true">
-      <span></span><span></span><span></span>
-    </div>
-  </div>
+  <video
+    id="loading-video"
+    src="/assets/video/logo-animado.mp4"
+    autoplay
+    muted
+    playsinline
+    preload="auto"
+    aria-hidden="true"
+  ></video>
 </div>
 
 <script>
@@ -27,63 +22,22 @@
     setTimeout(() => {
       screen.remove();
       document.body.classList.remove('loading');
-    }, 750);
+    }, 850);
   }
 
   if (video) {
     video.addEventListener('ended', dismiss);
     video.addEventListener('error', dismiss);
-    // Safety net: never block user more than 5 s
-    setTimeout(dismiss, 5000);
+    // Fallback: máximo 8 s por si el video tarda
+    setTimeout(dismiss, 8000);
   } else {
     dismiss();
   }
 </script>
 
-<style>
-  .loading-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-  }
-
-  #loading-video {
-    max-width: min(300px, 78vw);
-    height: auto;
-    border-radius: 20px;
-    box-shadow: 0 0 80px rgba(134, 89, 240, 0.4);
-    animation: pulse-glow 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 40px rgba(134, 89, 240, 0.3); }
-    50%       { box-shadow: 0 0 80px rgba(134, 89, 240, 0.6); }
-  }
-
-  .loading-dots {
-    display: flex;
-    gap: 8px;
-  }
-
-  .loading-dots span {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #8659f0;
-    animation: bounce 1.2s ease-in-out infinite;
-  }
-
-  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes bounce {
-    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-    40%            { transform: scale(1);   opacity: 1; }
-  }
-
+<style is:global>
+  /* Reduced-motion: dismiss loader immediately, no animation needed */
   @media (prefers-reduced-motion: reduce) {
-    .loading-dots span { animation: none; opacity: 1; transform: none; }
-    #loading-video { animation: none; }
+    #loading-screen { display: none !important; }
   }
 </style>
