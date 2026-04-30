@@ -17,14 +17,18 @@ const navLinks = [
       <!-- Brand column -->
       <div class="footer-brand">
         <a href="/" class="footer-logo" aria-label="Sofía Marcela Pedraza — Inicio">
-          <img
-            src="/assets/images/logo-fondo-blanco.png"
-            alt="Logo Sofía Marcela Pedraza Lozano"
-            width="160"
-            height="64"
-            loading="lazy"
-            decoding="async"
-          />
+          <video
+            id="footer-logo-video"
+            class="footer-logo-video"
+            muted
+            playsinline
+            loop
+            preload="none"
+            aria-label="Logo animado Sofía Marcela Pedraza Lozano"
+            poster="/assets/images/logo-fondo-blanco.png"
+          >
+            <source src="/assets/video/logo-animado.mp4" type="video/mp4" />
+          </video>
         </a>
         <p class="footer-desc">
           Psicóloga clínica y comunitaria en Yopal, Casanare. Atención empática,
@@ -132,6 +136,25 @@ const navLinks = [
   </div>
 </footer>
 
+<script>
+  // Reproduce el video del logo solo cuando el footer entra al viewport
+  const footerVideo = document.getElementById('footer-logo-video') as HTMLVideoElement | null;
+  if (footerVideo) {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            footerVideo.play().catch(() => {/* silencioso si falla */});
+            obs.unobserve(footerVideo);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+    obs.observe(footerVideo);
+  }
+</script>
+
 <style>
   .footer {
     background: var(--color-text);
@@ -158,12 +181,16 @@ const navLinks = [
     gap: var(--space-5);
   }
 
-  .footer-logo img {
-    height: 56px;
+  .footer-logo-video {
+    height: 64px;
     width: auto;
-    filter: brightness(0) invert(1);
-    opacity: 0.9;
+    display: block;
+    border-radius: 8px;
+    opacity: 0.92;
+    transition: opacity 0.2s;
   }
+
+  .footer-logo:hover .footer-logo-video { opacity: 1; }
 
   .footer-desc {
     font-size: var(--text-sm);

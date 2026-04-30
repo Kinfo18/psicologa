@@ -132,35 +132,8 @@ const schema = {
     <!-- Schema.org -->
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
-    <style is:inline>
-      /* Critical inline CSS — rendered literal in <head>, no bundling.
-         Must load before any external CSS to prevent FOUC on loading screen. */
-      body.loading { overflow: hidden; height: 100vh; }
-
-      #loading-screen {
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        background: #0f0a2e;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-      }
-      #loading-screen.fade-out {
-        opacity: 0;
-        pointer-events: none;
-      }
-      #loading-video {
-        width: 100vw;
-        height: 100vh;
-        object-fit: contain;
-        display: block;
-        background: #0f0a2e;
-      }
-    </style>
   </head>
-  <body class="loading">
+  <body>
     <slot />
 
     <!-- Reveal animation observer -->
