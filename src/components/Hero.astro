@@ -391,18 +391,20 @@
   }
 
   .hero-img {
-    height: min(520px, 72vw);
+    height: min(580px, 80vw);
     width: auto;
     object-fit: contain;
     object-position: bottom center;
     filter: drop-shadow(0 20px 60px rgba(59, 29, 225, 0.5));
     position: relative;
     z-index: 1;
+    mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
   }
 
   @media (min-width: 900px) {
     .hero-img {
-      height: min(680px, 50vh);
+      height: min(760px, 58vh);
       position: absolute;
       right: 0;
       bottom: 0;
