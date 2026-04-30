@@ -3,21 +3,39 @@
 <div id="loading-screen" role="status" aria-label="Cargando sitio web">
   <video
     id="loading-video"
-    src="/assets/video/logo-animado.mp4"
     autoplay
     muted
     playsinline
     preload="auto"
     aria-hidden="true"
   ></video>
+
+  <!-- Spinner visible mientras el blob carga -->
+  <div id="loading-spinner" class="spinner-wrap" aria-hidden="true">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Fallback si autoplay está bloqueado -->
+  <button id="play-btn" class="play-btn" aria-label="Toca para continuar" hidden>
+    <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
+      <circle cx="36" cy="36" r="34" fill="rgba(59,29,225,0.88)" stroke="rgba(210,149,255,0.5)" stroke-width="2"/>
+      <polygon points="29,22 55,36 29,50" fill="white"/>
+    </svg>
+    <span>Toca para continuar</span>
+  </button>
 </div>
 
 <script>
-  const screen = document.getElementById('loading-screen') as HTMLElement;
-  const video  = document.getElementById('loading-video')  as HTMLVideoElement;
+  const screen  = document.getElementById('loading-screen')  as HTMLElement;
+  const video   = document.getElementById('loading-video')   as HTMLVideoElement;
+  const spinner = document.getElementById('loading-spinner') as HTMLElement;
+  const playBtn = document.getElementById('play-btn')        as HTMLButtonElement;
+
+  let dismissed = false;
 
   function dismiss() {
-    if (!screen || screen.classList.contains('fade-out')) return;
+    if (dismissed || !screen) return;
+    dismissed = true;
     screen.classList.add('fade-out');
     setTimeout(() => {
       screen.remove();
@@ -25,19 +43,116 @@
     }, 850);
   }
 
-  if (video) {
-    video.addEventListener('ended', dismiss);
-    video.addEventListener('error', dismiss);
-    // Fallback: máximo 8 s por si el video tarda
-    setTimeout(dismiss, 8000);
-  } else {
-    dismiss();
+  // Safety net absoluto: máximo 12 s
+  const maxTimer = setTimeout(dismiss, 12_000);
+
+  async function initVideo() {
+    try {
+      // Fetch como blob para evitar la limitación de range-requests
+      // del servidor de desarrollo (Vite no envía Accept-Ranges)
+      const res = await fetch('/assets/video/logo-animado.mp4');
+      if (!res.ok) throw new Error('fetch failed');
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+
+      video.src = blobUrl;
+
+      // Ocultar spinner cuando el video está listo para reproducir
+      video.addEventListener('canplay', () => {
+        if (spinner) spinner.hidden = true;
+      }, { once: true });
+
+      video.addEventListener('ended', () => {
+        clearTimeout(maxTimer);
+        URL.revokeObjectURL(blobUrl);
+        dismiss();
+      }, { once: true });
+
+      // Intentar reproducir
+      try {
+        await video.play();
+      } catch {
+        // Autoplay bloqueado → mostrar botón manual
+        if (spinner) spinner.hidden = true;
+        if (playBtn) playBtn.hidden = false;
+
+        playBtn?.addEventListener('click', async () => {
+          playBtn.hidden = true;
+          try {
+            await video.play();
+          } catch {
+            dismiss();
+          }
+        }, { once: true });
+      }
+    } catch {
+      // Fetch falló completamente → cerrar loader
+      clearTimeout(maxTimer);
+      dismiss();
+    }
   }
+
+  initVideo();
 </script>
 
 <style is:global>
-  /* Reduced-motion: dismiss loader immediately, no animation needed */
+  /* Spinner mientras carga el blob */
+  .spinner-wrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(172, 119, 247, 0.25);
+    border-top-color: #8659f0;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Botón de reproducción manual */
+  .play-btn {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: 'Raleway', system-ui, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    z-index: 2;
+    transition: opacity 0.2s;
+  }
+
+  .play-btn:hover  { opacity: 0.8; }
+  .play-btn:focus-visible { outline: 3px solid #ac77f7; outline-offset: 4px; }
+
+  .play-btn svg {
+    filter: drop-shadow(0 0 24px rgba(134, 89, 240, 0.8));
+    transition: transform 0.2s;
+  }
+  .play-btn:hover svg { transform: scale(1.08); }
+
+  /* Ocultar loader en reduced-motion */
   @media (prefers-reduced-motion: reduce) {
     #loading-screen { display: none !important; }
+    .spinner { animation: none; }
   }
 </style>
